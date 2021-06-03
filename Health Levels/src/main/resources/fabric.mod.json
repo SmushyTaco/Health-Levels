@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "health_levels",
+  "version": "${version}",
+  "name": "Health Levels",
+  "description": "This mod lets you gain experience to get more health.",
+  "authors": [
+    "SmushyTaco"
+  ],
+  "contact": {
+    "homepage": "https://www.smushytaco.com/",
+    "issues": "https://www.curseforge.com/minecraft/mc-mods/health-levels/issues/",
+    "sources": "https://github.com/realSmushyTaco/Health-Levels/"
+  },
+  "license": "GNU Lesser General Public License version 3 (LGPLv3)",
+  "icon": "assets/health_levels/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.smushytaco.health_levels.HealthLevels"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "com.smushytaco.health_levels.HealthLevelsClient"
+      }
+    ],
+    "modmenu": [
+      "com.smushytaco.health_levels.configuration_support.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "health_levels.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "fabric-language-kotlin": ">=1.6.0+kotlin.1.5.0",
+    "minecraft": "1.16.x",
+    "cloth-config2": ">=4.11.24"
+  },
+  "suggests": {
+    "modmenu": ">=1.14.13+build.22"
+  }
+}

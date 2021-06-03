@@ -1,0 +1,8 @@
+{
+    "level_up_health": {
+        "category": "player",
+        "sounds": [
+            "health_levels:level_up_health"
+        ]
+    }
+}

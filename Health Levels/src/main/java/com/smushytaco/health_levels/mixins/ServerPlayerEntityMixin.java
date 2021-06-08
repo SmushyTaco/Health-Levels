@@ -4,8 +4,8 @@ import com.smushytaco.health_levels.HealthLevels;
 import com.smushytaco.health_levels.abstractions.HealthMethods;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -25,13 +25,13 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         HealthMethods.INSTANCE.onModified(this);
         ((GetEntryAccessor) dataTracker).invokeGetEntry(HealthAccessor.getHEALTH()).setDirty(true);
     }
-    @Inject(method = "writeCustomDataToTag", at = @At("HEAD"))
-    private void hookWriteCustomDataToTag(CompoundTag tag, CallbackInfo ci) {
-        tag.put(HealthLevels.MOD_ID, HealthMethods.INSTANCE.getTag(this));
+    @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
+    private void hookWriteCustomDataToTag(NbtCompound nbt, CallbackInfo ci) {
+        nbt.put(HealthLevels.MOD_ID, HealthMethods.INSTANCE.getTag(this));
     }
-    @Inject(method = "readCustomDataFromTag", at = @At("HEAD"))
-    private void hookReadCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
-        Tag data = tag.get(HealthLevels.MOD_ID);
+    @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
+    private void hookReadCustomDataFromTag(NbtCompound nbt, CallbackInfo ci) {
+        NbtElement data = nbt.get(HealthLevels.MOD_ID);
         if (data == null) return;
         HealthMethods.INSTANCE.readFromTag(this, data);
     }

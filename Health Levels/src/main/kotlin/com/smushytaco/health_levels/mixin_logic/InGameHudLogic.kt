@@ -1,4 +1,5 @@
 package com.smushytaco.health_levels.mixin_logic
+import com.mojang.blaze3d.systems.RenderSystem
 import com.smushytaco.health_levels.HealthLevels
 import com.smushytaco.health_levels.HealthLevels.identifier
 import com.smushytaco.health_levels.HealthLevelsClient
@@ -12,13 +13,13 @@ import net.minecraft.client.util.math.MatrixStack
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Environment(EnvType.CLIENT)
 object InGameHudLogic {
-    private val ICONS = "textures/gui/icons.png".identifier
+    private val ICONS = "textures/gui/experience_bars.png".identifier
     fun DrawableHelper.hookRenderExperienceBarLogic(client: MinecraftClient, ci: CallbackInfo, scaledHeight: Int, matrices: MatrixStack, x: Int, scaledWidth: Int, fontRenderer: TextRenderer) {
         if (!HealthLevels.config.enableHealthExperienceBar) return
         val player = client.player ?: return
         if (player !is HealthLevelsXP) return
         ci.cancel()
-        client.textureManager.bindTexture(ICONS)
+        RenderSystem.setShaderTexture(0, ICONS)
         client.profiler.push("levelUpHPBars")
         run {
             val target = HealthLevelsClient.levelsAndXP[player.healthLevel.coerceAtMost(HealthLevelsClient.levelsAndXP.size - 1)]
@@ -39,7 +40,7 @@ object InGameHudLogic {
             renderLevel(scaledHeight, fontRenderer, matrices, mcLevel, centerX + 93, 0x80FF20)
         }
         client.profiler.pop()
-        client.textureManager.bindTexture(DrawableHelper.GUI_ICONS_TEXTURE)
+        RenderSystem.setShaderTexture(0, DrawableHelper.GUI_ICONS_TEXTURE)
     }
     private fun DrawableHelper.renderProgress(matrices: MatrixStack, left: Int, top: Int, texX: Int, filled: Int) {
         drawTexture(matrices, left, top, texX, 0, 91, 5)

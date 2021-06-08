@@ -11,8 +11,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.Tag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtElement
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundCategory
@@ -81,19 +81,19 @@ object HealthMethods {
         if (config.loseType == LoseType.LEVELS_AND_XP) healthLevel = 0
         onModified()
     }
-    val PlayerEntity.tag: CompoundTag
+    val PlayerEntity.tag: NbtCompound
         get() {
-            val compoundTag = CompoundTag()
-            if (this !is HealthLevelsXP) return compoundTag
-            compoundTag.putInt(HEALTH_XP_KEY, healthXP)
-            compoundTag.putInt(HEALTH_LEVEL_KEY, healthLevel)
-            return compoundTag
+            val nbtCompound = NbtCompound()
+            if (this !is HealthLevelsXP) return nbtCompound
+            nbtCompound.putInt(HEALTH_XP_KEY, healthXP)
+            nbtCompound.putInt(HEALTH_LEVEL_KEY, healthLevel)
+            return nbtCompound
         }
-    fun PlayerEntity.readFromTag(tag: Tag) {
-        tag as CompoundTag
+    fun PlayerEntity.readFromTag(nbt: NbtElement) {
+        nbt as NbtCompound
         if (this !is HealthLevelsXP) return
-        healthXP = tag.getInt(HEALTH_XP_KEY)
-        healthLevel = tag.getInt(HEALTH_LEVEL_KEY)
+        healthXP = nbt.getInt(HEALTH_XP_KEY)
+        healthLevel = nbt.getInt(HEALTH_LEVEL_KEY)
         onModified()
     }
 }

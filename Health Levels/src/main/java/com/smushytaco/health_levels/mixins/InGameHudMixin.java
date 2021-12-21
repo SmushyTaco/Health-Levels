@@ -24,9 +24,9 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Shadow
     private int scaledWidth;
     @Shadow
-    public abstract TextRenderer getFontRenderer();
+    public abstract TextRenderer getTextRenderer();
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     private void hookRenderExperienceBar(MatrixStack matrices, int x, CallbackInfo ci) {
-        InGameHudLogic.INSTANCE.hookRenderExperienceBarLogic(this, client, ci, scaledHeight, matrices, x, scaledWidth, getFontRenderer());
+        InGameHudLogic.INSTANCE.hookRenderExperienceBarLogic(this, client, ci, scaledHeight, matrices, x, scaledWidth, getTextRenderer());
     }
 }

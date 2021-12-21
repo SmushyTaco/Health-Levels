@@ -53,9 +53,7 @@ object HealthMethods {
         val entityAttributeInstance = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
         entityAttributeInstance?.removeModifier(entityAttributeModifier.id)
         entityAttributeInstance?.addPersistentModifier(entityAttributeModifier)
-        if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) {
-            health = maxHealth
-        }
+        if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) health = maxHealth
         if (hasLeveledUp) {
             hasLeveledUp = false
             world.playSound(null, x, y, z, HealthLevels.LEVEL_UP_HEALTH, SoundCategory.PLAYERS, 1.0F, 1.0F)
@@ -85,15 +83,15 @@ object HealthMethods {
         get() {
             val nbtCompound = NbtCompound()
             if (this !is HealthLevelsXP) return nbtCompound
-            nbtCompound.putInt(HEALTH_XP_KEY, healthXP)
             nbtCompound.putInt(HEALTH_LEVEL_KEY, healthLevel)
+            nbtCompound.putInt(HEALTH_XP_KEY, healthXP)
             return nbtCompound
         }
     fun PlayerEntity.readFromTag(nbt: NbtElement) {
         nbt as NbtCompound
         if (this !is HealthLevelsXP) return
-        healthXP = nbt.getInt(HEALTH_XP_KEY)
         healthLevel = nbt.getInt(HEALTH_LEVEL_KEY)
+        healthXP = nbt.getInt(HEALTH_XP_KEY)
         onModified()
     }
 }

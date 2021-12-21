@@ -30,15 +30,12 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     }
     @Override
     public int getHealthXP() {
-        if (getHealthLevel() == HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size() || healthXP < 0) return 0;
+        if (getHealthLevel() == HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size() || healthXP < 0) setHealthXP(0);
         return healthXP;
     }
     @Override
     public void setHealthXP(int healthXP) {
-        if (getHealthLevel() == HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size() || healthXP < 0) {
-            this.healthXP = 0;
-            return;
-        }
+        if (getHealthLevel() == HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size() || healthXP < 0) healthXP = 0;
         this.healthXP = healthXP;
     }
     @Override

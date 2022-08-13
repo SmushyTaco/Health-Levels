@@ -8,7 +8,6 @@ import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 object Command {
     private fun getter(response: (HealthLevelsXP) -> Text, literal: String = "check"): LiteralArgumentBuilder<ServerCommandSource> {
@@ -64,7 +63,7 @@ object Command {
                 target.onModified()
             },
             getter({ target ->
-                LiteralText("Level: ${target.healthLevel}\nXP: ${target.healthXP}/${HealthLevels.config.levelsAndXP[target.healthLevel.coerceAtMost(HealthLevels.config.levelsAndXP.size - 1)]}")
+                Text.literal("Level: ${target.healthLevel}\nXP: ${target.healthXP}/${HealthLevels.config.levelsAndXP[target.healthLevel.coerceAtMost(HealthLevels.config.levelsAndXP.size - 1)]}")
             })).forEach { subCmd -> base.then(subCmd) }
         return base
     }

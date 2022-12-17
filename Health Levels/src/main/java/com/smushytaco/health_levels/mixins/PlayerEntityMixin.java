@@ -1,10 +1,10 @@
 package com.smushytaco.health_levels.mixins;
+
 import com.mojang.authlib.GameProfile;
 import com.smushytaco.health_levels.HealthLevels;
 import com.smushytaco.health_levels.abstractions.HealthLevelsXP;
 import com.smushytaco.health_levels.abstractions.HealthMethods;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -44,7 +44,7 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     @Override
     public void setHasLeveledUp(boolean hasLeveledUp) { this.hasLeveledUp = hasLeveledUp; }
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, PlayerPublicKey publicKey, CallbackInfo ci) {
+    private void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
         HealthMethods.INSTANCE.updateHealth((PlayerEntity) (Object) this);
     }
     @Inject(method = "addExperience", at = @At("HEAD"))

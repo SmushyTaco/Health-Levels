@@ -10,9 +10,10 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.minecraft.registry.Registries
+import net.minecraft.registry.Registry
 import net.minecraft.sound.SoundEvent
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
 import java.util.*
 object HealthLevels : ModInitializer {
     const val MOD_ID = "health_levels"
@@ -20,9 +21,9 @@ object HealthLevels : ModInitializer {
     lateinit var config: ModConfiguration
         private set
     private val LEVEL_UP_HEALTH_IDENTIFIER = "level_up_health".identifier
-    val LEVEL_UP_HEALTH = SoundEvent(LEVEL_UP_HEALTH_IDENTIFIER)
+    val LEVEL_UP_HEALTH: SoundEvent = SoundEvent.of(LEVEL_UP_HEALTH_IDENTIFIER)
     override fun onInitialize() {
-        Registry.register(Registry.SOUND_EVENT, LEVEL_UP_HEALTH_IDENTIFIER, LEVEL_UP_HEALTH)
+        Registry.register(Registries.SOUND_EVENT, LEVEL_UP_HEALTH_IDENTIFIER, LEVEL_UP_HEALTH)
         AutoConfig.register(ModConfiguration::class.java) { definition: Config, configClass: Class<ModConfiguration> ->
             GsonConfigSerializer(definition, configClass)
         }

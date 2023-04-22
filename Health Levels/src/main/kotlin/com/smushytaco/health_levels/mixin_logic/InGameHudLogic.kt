@@ -42,10 +42,10 @@ object InGameHudLogic {
         client.profiler.pop()
         RenderSystem.setShaderTexture(0, DrawableHelper.GUI_ICONS_TEXTURE)
     }
-    private fun DrawableHelper.renderProgress(matrices: MatrixStack, left: Int, top: Int, texX: Int, filled: Int) {
-        drawTexture(matrices, left, top, texX, 0, 91, 5)
+    private fun renderProgress(matrices: MatrixStack, left: Int, top: Int, texX: Int, filled: Int) {
+        DrawableHelper.drawTexture(matrices, left, top, texX, 0, 91, 5)
         if (filled > 0) {
-            drawTexture(matrices, left, top, texX, 5, filled, 5)
+            DrawableHelper.drawTexture(matrices, left, top, texX, 5, filled, 5)
         }
     }
     private fun renderLevel(scaledHeight: Int, fontRenderer: TextRenderer, matrices: MatrixStack, str: String, left: Int, color: Int) {

@@ -6,7 +6,6 @@
     "GetEntryAccessor",
     "HealthAccessor",
     "PlayerEntityMixin",
-    "PlayerManagerMixin",
     "ServerPlayerEntityMixin"
   ],
   "client": [

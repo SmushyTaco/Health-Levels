@@ -10,6 +10,7 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.sound.SoundEvent
@@ -28,9 +29,7 @@ object HealthLevels : ModInitializer {
             GsonConfigSerializer(definition, configClass)
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
-        ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted {
-            it.commandManager.dispatcher.register(Command.buildHealthLevelsCommand())
-        })
+        ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted { it.commandManager.dispatcher.register(Command.buildHealthLevelsCommand()) })
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             newPlayer.onModified()
             newPlayer.health = newPlayer.maxHealth
@@ -39,6 +38,7 @@ object HealthLevels : ModInitializer {
             newPlayer.copyPlayerData(oldPlayer)
             if (!alive) newPlayer.deathPenalty()
         })
+        ServerPlayConnectionEvents.JOIN.register(ServerPlayConnectionEvents.Join { handler, _, _ -> handler.player.onModified() })
     }
     val String.identifier: Identifier
         get() = Identifier(MOD_ID, this)

@@ -47,9 +47,7 @@ object HealthMethods {
             HEALTH_LEVEL_PACKET_IDENTIFIER.createPacket(healthLevel, this)
             CONFIG_PACKET_IDENTIFIER.createConfigPacket(this)
         }
-        val entityAttributeModifier = EntityAttributeModifier(HEALTH_MODIFIER_UUID, "Health Modifier",
-            (-20 + config.startingHP + healthLevel * config.hpPerLevel).coerceAtLeast(-19).toDouble(),
-            EntityAttributeModifier.Operation.ADDITION)
+        val entityAttributeModifier = EntityAttributeModifier(HEALTH_MODIFIER_UUID, "Health Modifier", (-20 + config.startingHP + healthLevel * config.hpPerLevel).coerceAtLeast(-19).toDouble(), EntityAttributeModifier.Operation.ADDITION)
         val entityAttributeInstance = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
         entityAttributeInstance?.removeModifier(entityAttributeModifier.id)
         entityAttributeInstance?.addPersistentModifier(entityAttributeModifier)

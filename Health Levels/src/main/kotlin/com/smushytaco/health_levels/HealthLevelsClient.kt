@@ -13,11 +13,15 @@ object HealthLevelsClient : ClientModInitializer {
         private set
     var healthLevel = 0
         private set
+    var healthXP = 0
+        private set
     override fun onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(HealthMethods.HEALTH_XP_PACKET_IDENTIFIER) { client, _, buf, _ ->
+            val healthXP = buf.readInt()
+            this.healthXP = healthXP
             client.player?.let {
                 if (it !is HealthLevelsXP) return@let
-                it.healthXP = buf.readInt()
+                it.healthXP = healthXP
             }
         }
         ClientPlayNetworking.registerGlobalReceiver(HealthMethods.HEALTH_LEVEL_PACKET_IDENTIFIER) { client, _, buf, _ ->

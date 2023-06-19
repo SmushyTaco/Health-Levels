@@ -8,26 +8,25 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.font.TextRenderer
-import net.minecraft.client.gui.DrawableHelper
-import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.gui.DrawContext
+import net.minecraft.util.Identifier
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Environment(EnvType.CLIENT)
 object InGameHudLogic {
     private val ICONS = "textures/gui/experience_bars.png".identifier
-    fun DrawableHelper.hookRenderExperienceBarLogic(client: MinecraftClient, ci: CallbackInfo, scaledHeight: Int, matrices: MatrixStack, x: Int, scaledWidth: Int, fontRenderer: TextRenderer) {
+    fun hookRenderExperienceBarLogic(texture: Identifier, client: MinecraftClient, ci: CallbackInfo, scaledHeight: Int, context: DrawContext, x: Int, scaledWidth: Int, fontRenderer: TextRenderer) {
         if (!HealthLevels.config.enableHealthExperienceBar) return
         val player = client.player ?: return
         if (player !is HealthLevelsXP) return
         ci.cancel()
-        RenderSystem.setShaderTexture(0, ICONS)
         client.profiler.push("levelUpHPBars")
         run {
             val target = HealthLevelsClient.levelsAndXP[player.healthLevel.coerceAtMost(HealthLevelsClient.levelsAndXP.size - 1)]
-            val hpXpBarWidth = if (target != 0) player.healthXP * 91 / target else 0
+            val hpXpBarWidth = if (target != 0) HealthLevelsClient.healthXP * 91 / target else 0
             val mcXpBarWidth = (player.experienceProgress * 91).toInt()
             val top = scaledHeight - 29
-            renderProgress(matrices, x, top, 0, hpXpBarWidth)
-            renderProgress(matrices, x + 91, top, 91, mcXpBarWidth)
+            renderProgress(ICONS, context, x, top, 0, hpXpBarWidth)
+            renderProgress(ICONS, context, x + 91, top, 91, mcXpBarWidth)
         }
         client.profiler.pop()
         client.profiler.push("levelUpHPLevels")
@@ -36,24 +35,23 @@ object InGameHudLogic {
             val mcLevel = player.experienceLevel.toString()
             val centerX = scaledWidth / 2
             val hpLevelWidth = fontRenderer.getWidth(hpLevel)
-            renderLevel(scaledHeight, fontRenderer, matrices, hpLevel, centerX - 92 - hpLevelWidth, 0xff3f3f)
-            renderLevel(scaledHeight, fontRenderer, matrices, mcLevel, centerX + 93, 0x80FF20)
+            renderLevel(scaledHeight, fontRenderer, context, hpLevel, centerX - 92 - hpLevelWidth, 0xff3f3f)
+            renderLevel(scaledHeight, fontRenderer, context, mcLevel, centerX + 93, 0x80FF20)
         }
         client.profiler.pop()
-        RenderSystem.setShaderTexture(0, DrawableHelper.GUI_ICONS_TEXTURE)
+        RenderSystem.setShaderTexture(0, texture)
     }
-    private fun renderProgress(matrices: MatrixStack, left: Int, top: Int, texX: Int, filled: Int) {
-        DrawableHelper.drawTexture(matrices, left, top, texX, 0, 91, 5)
-        if (filled > 0) {
-            DrawableHelper.drawTexture(matrices, left, top, texX, 5, filled, 5)
-        }
+    @Suppress("SameParameterValue")
+    private fun renderProgress(texture: Identifier, context: DrawContext, left: Int, top: Int, texX: Int, filled: Int) {
+        context.drawTexture(texture, left, top, texX, 0, 91, 5)
+        if (filled > 0) context.drawTexture(texture, left, top, texX, 5, filled, 5)
     }
-    private fun renderLevel(scaledHeight: Int, fontRenderer: TextRenderer, matrices: MatrixStack, str: String, left: Int, color: Int) {
+    private fun renderLevel(scaledHeight: Int, fontRenderer: TextRenderer, context: DrawContext, str: String, left: Int, color: Int) {
         val top = scaledHeight - 30
-        fontRenderer.draw(matrices, str, (left + 1).toFloat(), top.toFloat(), 0)
-        fontRenderer.draw(matrices, str, (left - 1).toFloat(), top.toFloat(), 0)
-        fontRenderer.draw(matrices, str, left.toFloat(), (top + 1).toFloat(), 0)
-        fontRenderer.draw(matrices, str, left.toFloat(), (top - 1).toFloat(), 0)
-        fontRenderer.draw(matrices, str, left.toFloat(), top.toFloat(), color)
+        context.drawText(fontRenderer, str, (left + 1), top, 0, false)
+        context.drawText(fontRenderer, str, (left - 1), top, 0, false)
+        context.drawText(fontRenderer, str, left, (top + 1), 0, false)
+        context.drawText(fontRenderer, str, left, (top - 1), 0, false)
+        context.drawText(fontRenderer, str, left, top, color, false)
     }
 }

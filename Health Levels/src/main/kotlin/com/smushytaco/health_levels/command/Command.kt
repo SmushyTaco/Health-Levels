@@ -13,13 +13,13 @@ object Command {
     private fun getter(response: (HealthLevelsXP) -> Text, literal: String = "check"): LiteralArgumentBuilder<ServerCommandSource> {
         return LiteralArgumentBuilder.literal<ServerCommandSource>(literal)
             .executes { ctx ->
-                ctx.source.sendFeedback(response(ctx.source.player as HealthLevelsXP), false)
+                ctx.source.sendFeedback({ response(ctx.source.player as HealthLevelsXP) }, false)
                 return@executes 0
             }
             .then(CommandManager.argument("player", EntityArgumentType.player())
                 .requires { it.hasPermissionLevel(2) }
                 .executes { ctx ->
-                    ctx.source.sendFeedback(response(EntityArgumentType.getPlayer(ctx, "player") as HealthLevelsXP), true)
+                    ctx.source.sendFeedback({ response(EntityArgumentType.getPlayer(ctx, "player") as HealthLevelsXP) }, true)
                     return@executes 0
                 })
     }
@@ -31,9 +31,7 @@ object Command {
                     .executes { ctx ->
                         val players = EntityArgumentType.getPlayers(ctx, "players")
                         val amount = IntegerArgumentType.getInteger(ctx, "amount")
-                        players
-                            .map { it }
-                            .forEach { set(it, amount) }
+                        players.map { it }.forEach { set(it, amount) }
                         return@executes 0
                     }
                 )
@@ -62,9 +60,7 @@ object Command {
                 target.healthLevel += healthLevels
                 target.onModified()
             },
-            getter({ target ->
-                Text.literal("Level: ${target.healthLevel}\nXP: ${target.healthXP}/${HealthLevels.config.levelsAndXP[target.healthLevel.coerceAtMost(HealthLevels.config.levelsAndXP.size - 1)]}")
-            })).forEach { subCmd -> base.then(subCmd) }
+            getter({ target -> Text.literal("Level: ${target.healthLevel}\nXP: ${target.healthXP}/${HealthLevels.config.levelsAndXP[target.healthLevel.coerceAtMost(HealthLevels.config.levelsAndXP.size - 1)]}") })).forEach { subCmd -> base.then(subCmd) }
         return base
     }
 }

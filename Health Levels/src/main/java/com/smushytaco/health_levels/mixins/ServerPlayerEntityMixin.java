@@ -1,5 +1,4 @@
 package com.smushytaco.health_levels.mixins;
-
 import com.mojang.authlib.GameProfile;
 import com.smushytaco.health_levels.HealthLevels;
 import com.smushytaco.health_levels.abstractions.HealthMethods;
@@ -18,18 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
-    public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
-    }
+    protected ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) { super(world, pos, yaw, gameProfile); }
     @Inject(method = "moveToWorld", at = @At(value = "RETURN", ordinal = 1))
     private void hookMoveToWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
         HealthMethods.INSTANCE.onModified(this);
         ((GetEntryAccessor) dataTracker).invokeGetEntry(HealthAccessor.getHEALTH()).setDirty(true);
     }
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
-    private void hookWriteCustomDataToTag(NbtCompound nbt, CallbackInfo ci) {
-        nbt.put(HealthLevels.MOD_ID, HealthMethods.INSTANCE.getTag(this));
-    }
+    private void hookWriteCustomDataToTag(NbtCompound nbt, CallbackInfo ci) { nbt.put(HealthLevels.MOD_ID, HealthMethods.INSTANCE.getTag(this)); }
     @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
     private void hookReadCustomDataFromTag(NbtCompound nbt, CallbackInfo ci) {
         NbtElement data = nbt.get(HealthLevels.MOD_ID);

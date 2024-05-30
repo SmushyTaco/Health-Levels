@@ -4,12 +4,16 @@ import com.smushytaco.health_levels.abstractions.HealthMethods.deathPenalty
 import com.smushytaco.health_levels.abstractions.HealthMethods.onModified
 import com.smushytaco.health_levels.command.Command
 import com.smushytaco.health_levels.configuration_support.ModConfiguration
+import com.smushytaco.health_levels.payloads.LevelPayload
+import com.smushytaco.health_levels.payloads.LevelsAndXpPayload
+import com.smushytaco.health_levels.payloads.XpPayload
 import me.shedaniel.autoconfig.AutoConfig
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
@@ -29,6 +33,9 @@ object HealthLevels : ModInitializer {
             GsonConfigSerializer(definition, configClass)
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
+        PayloadTypeRegistry.playS2C().register(XpPayload.payloadId, XpPayload.CODEC)
+        PayloadTypeRegistry.playS2C().register(LevelPayload.payloadId, LevelPayload.CODEC)
+        PayloadTypeRegistry.playS2C().register(LevelsAndXpPayload.payloadId, LevelsAndXpPayload.CODEC)
         ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted { it.commandManager.dispatcher.register(Command.buildHealthLevelsCommand()) })
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             newPlayer.onModified()

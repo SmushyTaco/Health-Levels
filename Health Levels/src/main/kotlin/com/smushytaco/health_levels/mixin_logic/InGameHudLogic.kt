@@ -1,5 +1,4 @@
 package com.smushytaco.health_levels.mixin_logic
-import com.mojang.blaze3d.systems.RenderSystem
 import com.smushytaco.health_levels.HealthLevels
 import com.smushytaco.health_levels.HealthLevels.identifier
 import com.smushytaco.health_levels.HealthLevelsClient
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Environment(EnvType.CLIENT)
 object InGameHudLogic {
     private val ICONS = "textures/gui/experience_bars.png".identifier
-    fun hookRenderExperienceBarLogic(texture: Identifier, client: MinecraftClient, ci: CallbackInfo, scaledHeight: Int, context: DrawContext, x: Int, scaledWidth: Int, fontRenderer: TextRenderer) {
+    fun hookRenderExperienceBarLogic(client: MinecraftClient, ci: CallbackInfo, context: DrawContext, x: Int, fontRenderer: TextRenderer) {
         if (!HealthLevels.config.enableHealthExperienceBar) return
         val player = client.player ?: return
         if (player !is HealthLevelsXP) return
@@ -24,7 +23,7 @@ object InGameHudLogic {
             val target = HealthLevelsClient.levelsAndXP[player.healthLevel.coerceAtMost(HealthLevelsClient.levelsAndXP.size - 1)]
             val hpXpBarWidth = if (target != 0) HealthLevelsClient.healthXP * 91 / target else 0
             val mcXpBarWidth = (player.experienceProgress * 91).toInt()
-            val top = scaledHeight - 29
+            val top = context.scaledWindowHeight - 29
             renderProgress(ICONS, context, x, top, 0, hpXpBarWidth)
             renderProgress(ICONS, context, x + 91, top, 91, mcXpBarWidth)
         }
@@ -33,13 +32,12 @@ object InGameHudLogic {
         run {
             val hpLevel = HealthLevelsClient.healthLevel.toString()
             val mcLevel = player.experienceLevel.toString()
-            val centerX = scaledWidth / 2
+            val centerX = context.scaledWindowWidth / 2
             val hpLevelWidth = fontRenderer.getWidth(hpLevel)
-            renderLevel(scaledHeight, fontRenderer, context, hpLevel, centerX - 92 - hpLevelWidth, 0xff3f3f)
-            renderLevel(scaledHeight, fontRenderer, context, mcLevel, centerX + 93, 0x80FF20)
+            renderLevel(context.scaledWindowHeight, fontRenderer, context, hpLevel, centerX - 92 - hpLevelWidth, 0xff3f3f)
+            renderLevel(context.scaledWindowHeight, fontRenderer, context, mcLevel, centerX + 93, 0x80FF20)
         }
         client.profiler.pop()
-        RenderSystem.setShaderTexture(0, texture)
     }
     @Suppress("SameParameterValue")
     private fun renderProgress(texture: Identifier, context: DrawContext, left: Int, top: Int, texX: Int, filled: Int) {

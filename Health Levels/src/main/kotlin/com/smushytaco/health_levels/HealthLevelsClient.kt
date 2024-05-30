@@ -1,7 +1,8 @@
 package com.smushytaco.health_levels
 import com.smushytaco.health_levels.abstractions.HealthLevelsXP
-import com.smushytaco.health_levels.abstractions.HealthMethods
-import com.smushytaco.health_levels.configuration_support.ModConfiguration
+import com.smushytaco.health_levels.payloads.LevelsAndXpPayload
+import com.smushytaco.health_levels.payloads.LevelPayload
+import com.smushytaco.health_levels.payloads.XpPayload
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -16,26 +17,20 @@ object HealthLevelsClient : ClientModInitializer {
     var healthXP = 0
         private set
     override fun onInitializeClient() {
-        ClientPlayNetworking.registerGlobalReceiver(HealthMethods.HEALTH_XP_PACKET_IDENTIFIER) { client, _, buf, _ ->
-            val healthXP = buf.readInt()
-            this.healthXP = healthXP
-            client.player?.let {
+        ClientPlayNetworking.registerGlobalReceiver(XpPayload.payloadId) { xpPayload, context ->
+            this.healthXP = xpPayload.value
+            context.player()?.let {
                 if (it !is HealthLevelsXP) return@let
                 it.healthXP = healthXP
             }
         }
-        ClientPlayNetworking.registerGlobalReceiver(HealthMethods.HEALTH_LEVEL_PACKET_IDENTIFIER) { client, _, buf, _ ->
-            val healthLevel = buf.readInt()
-            this.healthLevel = healthLevel
-            client.player?.let {
+        ClientPlayNetworking.registerGlobalReceiver(LevelPayload.payloadId) { levelPayload, context ->
+            this.healthLevel = levelPayload.value
+            context.player()?.let {
                 if (it !is HealthLevelsXP) return@let
                 it.healthLevel = healthLevel
             }
         }
-        ClientPlayNetworking.registerGlobalReceiver(HealthMethods.CONFIG_PACKET_IDENTIFIER) { _, _, buf, _ ->
-            val json = (1 .. buf.readInt()).fold(StringBuilder()) { s, _ -> s.append(buf.readChar()) }.toString()
-            val config = HealthMethods.gson.fromJson(json, ModConfiguration::class.java)
-            levelsAndXP = config.levelsAndXP
-        }
+        ClientPlayNetworking.registerGlobalReceiver(LevelsAndXpPayload.payloadId) { levelsAndXpPayload, _ -> levelsAndXP = levelsAndXpPayload.value }
     }
 }

@@ -1,4 +1,5 @@
 package com.smushytaco.health_levels.mixins;
+import com.smushytaco.health_levels.HealthLevels;
 import com.smushytaco.health_levels.mixin_logic.InGameHudLogic;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -6,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,14 +20,9 @@ public abstract class InGameHudMixin {
     @Final
     private MinecraftClient client;
     @Shadow
-    private int scaledHeight;
-    @Shadow
-    private int scaledWidth;
-    @Shadow
     public abstract TextRenderer getTextRenderer();
-    @Shadow
-    @Final
-    private static Identifier ICONS;
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
-    private void hookRenderExperienceBar(DrawContext context, int x, CallbackInfo ci) { InGameHudLogic.INSTANCE.hookRenderExperienceBarLogic(ICONS, client, ci, scaledHeight, context, x, scaledWidth, getTextRenderer()); }
+    private void hookRenderExperienceBar(DrawContext context, int x, CallbackInfo ci) { InGameHudLogic.INSTANCE.hookRenderExperienceBarLogic(client, ci, context, x, getTextRenderer()); }
+    @Inject(method = "renderExperienceLevel", at = @At("HEAD"), cancellable = true)
+    private void hookRenderExperienceLevel(DrawContext context, float x, CallbackInfo ci) { if (HealthLevels.INSTANCE.getConfig().getEnableHealthExperienceBar()) ci.cancel(); }
 }

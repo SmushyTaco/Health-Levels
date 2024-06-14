@@ -19,10 +19,9 @@ import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.sound.SoundEvent
 import net.minecraft.util.Identifier
-import java.util.*
 object HealthLevels : ModInitializer {
     const val MOD_ID = "health_levels"
-    val HEALTH_MODIFIER_UUID: UUID = UUID.fromString("6a2fa460-2603-4a19-bdea-47c4036d6437")
+    val HEALTH_MODIFIER_IDENTIFIER = "health_modifier".identifier
     lateinit var config: ModConfiguration
         private set
     private val LEVEL_UP_HEALTH_IDENTIFIER = "level_up_health".identifier
@@ -48,5 +47,5 @@ object HealthLevels : ModInitializer {
         ServerPlayConnectionEvents.JOIN.register(ServerPlayConnectionEvents.Join { handler, _, _ -> handler.player.onModified() })
     }
     val String.identifier: Identifier
-        get() = Identifier(MOD_ID, this)
+        get() = Identifier.of(MOD_ID, this)
 }

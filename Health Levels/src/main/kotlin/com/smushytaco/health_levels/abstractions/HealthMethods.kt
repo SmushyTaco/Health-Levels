@@ -1,6 +1,6 @@
 package com.smushytaco.health_levels.abstractions
 import com.smushytaco.health_levels.HealthLevels
-import com.smushytaco.health_levels.HealthLevels.HEALTH_MODIFIER_UUID
+import com.smushytaco.health_levels.HealthLevels.HEALTH_MODIFIER_IDENTIFIER
 import com.smushytaco.health_levels.HealthLevels.config
 import com.smushytaco.health_levels.HealthLevels.identifier
 import com.smushytaco.health_levels.configuration_support.LoseType
@@ -28,7 +28,7 @@ object HealthMethods {
             ServerPlayNetworking.send(this, LevelPayload(healthLevel))
             ServerPlayNetworking.send(this, LevelsAndXpPayload(config.levelsAndXP))
         }
-        val entityAttributeModifier = EntityAttributeModifier(HEALTH_MODIFIER_UUID, "Health Modifier", (-20 + config.startingHP + healthLevel * config.hpPerLevel).coerceAtLeast(-19).toDouble(), EntityAttributeModifier.Operation.ADD_VALUE)
+        val entityAttributeModifier = EntityAttributeModifier(HEALTH_MODIFIER_IDENTIFIER, (-20 + config.startingHP + healthLevel * config.hpPerLevel).coerceAtLeast(-19).toDouble(), EntityAttributeModifier.Operation.ADD_VALUE)
         val entityAttributeInstance = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
         entityAttributeInstance?.removeModifier(entityAttributeModifier)
         entityAttributeInstance?.addPersistentModifier(entityAttributeModifier)

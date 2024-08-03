@@ -1,0 +1,9 @@
+{
+  "text.autoconfig.health_levels.title": "체력 레벨 구성",
+  "text.autoconfig.health_levels.option.enableHealthExperienceBar": "체력 경험치 바 활성화",
+  "text.autoconfig.health_levels.option.levelsAndXP": "레벨과 XP",
+  "text.autoconfig.health_levels.option.hpPerLevel": "레벨 당 HP",
+  "text.autoconfig.health_levels.option.startingHP": "시작 HP",
+  "text.autoconfig.health_levels.option.healOnLevelUp": "레벨 업 시 회복",
+  "text.autoconfig.health_levels.option.loseType": "손실 유형"
+}

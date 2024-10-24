@@ -29,7 +29,7 @@ object HealthMethods {
             ServerPlayNetworking.send(this, LevelsAndXpPayload(config.levelsAndXP))
         }
         val entityAttributeModifier = EntityAttributeModifier(HEALTH_MODIFIER_IDENTIFIER, (-20 + config.startingHP + healthLevel * config.hpPerLevel).coerceAtLeast(-19).toDouble(), EntityAttributeModifier.Operation.ADD_VALUE)
-        val entityAttributeInstance = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
+        val entityAttributeInstance = getAttributeInstance(EntityAttributes.MAX_HEALTH)
         entityAttributeInstance?.removeModifier(entityAttributeModifier)
         entityAttributeInstance?.addPersistentModifier(entityAttributeModifier)
         if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) health = maxHealth

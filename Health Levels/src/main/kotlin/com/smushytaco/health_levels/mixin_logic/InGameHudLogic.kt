@@ -8,7 +8,9 @@ import net.fabricmc.api.Environment
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.util.Identifier
+import net.minecraft.util.profiler.Profilers
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Environment(EnvType.CLIENT)
 object InGameHudLogic {
@@ -18,17 +20,17 @@ object InGameHudLogic {
         val player = client.player ?: return
         if (player !is HealthLevelsXP) return
         ci.cancel()
-        client.profiler.push("levelUpHPBars")
+        Profilers.get().push("levelUpHPBars")
         run {
             val target = HealthLevelsClient.levelsAndXP[player.healthLevel.coerceAtMost(HealthLevelsClient.levelsAndXP.size - 1)]
             val hpXpBarWidth = if (target != 0) HealthLevelsClient.healthXP * 91 / target else 0
             val mcXpBarWidth = (player.experienceProgress * 91).toInt()
             val top = context.scaledWindowHeight - 29
-            renderProgress(ICONS, context, x, top, 0, hpXpBarWidth)
-            renderProgress(ICONS, context, x + 91, top, 91, mcXpBarWidth)
+            renderProgress(ICONS, context, x, top, 0.0F, hpXpBarWidth)
+            renderProgress(ICONS, context, x + 91, top, 91.0F, mcXpBarWidth)
         }
-        client.profiler.pop()
-        client.profiler.push("levelUpHPLevels")
+        Profilers.get().pop()
+        Profilers.get().push("levelUpHPLevels")
         run {
             val hpLevel = HealthLevelsClient.healthLevel.toString()
             val mcLevel = player.experienceLevel.toString()
@@ -37,12 +39,12 @@ object InGameHudLogic {
             renderLevel(context.scaledWindowHeight, fontRenderer, context, hpLevel, centerX - 92 - hpLevelWidth, 0xff3f3f)
             renderLevel(context.scaledWindowHeight, fontRenderer, context, mcLevel, centerX + 93, 0x80FF20)
         }
-        client.profiler.pop()
+        Profilers.get().pop()
     }
     @Suppress("SameParameterValue")
-    private fun renderProgress(texture: Identifier, context: DrawContext, left: Int, top: Int, texX: Int, filled: Int) {
-        context.drawTexture(texture, left, top, texX, 0, 91, 5)
-        if (filled > 0) context.drawTexture(texture, left, top, texX, 5, filled, 5)
+    private fun renderProgress(texture: Identifier, context: DrawContext, left: Int, top: Int, texX: Float, filled: Int) {
+        context.drawTexture(RenderLayer::getGuiTextured, texture, left, top, texX, 0.0F, 91, 5, 256, 256)
+        if (filled > 0) context.drawTexture(RenderLayer::getGuiTextured, texture, left, top, texX, 5.0F, filled, 5, 256, 256)
     }
     private fun renderLevel(scaledHeight: Int, fontRenderer: TextRenderer, context: DrawContext, str: String, left: Int, color: Int) {
         val top = scaledHeight - 30

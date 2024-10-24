@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     protected ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) { super(world, pos, yaw, gameProfile); }
-    @Inject(method = "teleportTo", at = @At(value = "RETURN", ordinal = 1))
+    @Inject(method = "teleportTo*", at = @At(value = "RETURN", ordinal = 1))
     private void hookTeleportTo(TeleportTarget teleportTarget, CallbackInfoReturnable<Entity> cir) {
         HealthMethods.INSTANCE.onModified(this);
         ((GetEntryAccessor) dataTracker).invokeGetEntry(HealthAccessor.getHEALTH()).setDirty(true);

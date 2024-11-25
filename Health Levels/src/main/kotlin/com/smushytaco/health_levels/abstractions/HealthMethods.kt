@@ -4,7 +4,6 @@ import com.smushytaco.health_levels.HealthLevels.HEALTH_MODIFIER_IDENTIFIER
 import com.smushytaco.health_levels.HealthLevels.config
 import com.smushytaco.health_levels.HealthLevels.identifier
 import com.smushytaco.health_levels.configuration_support.LoseType
-import com.smushytaco.health_levels.payloads.LevelsAndXpPayload
 import com.smushytaco.health_levels.payloads.LevelPayload
 import com.smushytaco.health_levels.payloads.XpPayload
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -18,7 +17,6 @@ import net.minecraft.sound.SoundCategory
 object HealthMethods {
     val HEALTH_XP_PACKET_IDENTIFIER = "health_xp".identifier
     val HEALTH_LEVEL_PACKET_IDENTIFIER = "health_level".identifier
-    val CONFIG_PACKET_IDENTIFIER = "config".identifier
     private const val HEALTH_XP_KEY = "healthXP"
     private const val HEALTH_LEVEL_KEY = "healthLevel"
     fun PlayerEntity.updateHealth() {
@@ -26,7 +24,6 @@ object HealthMethods {
         if (networkHandler != null) {
             ServerPlayNetworking.send(this, XpPayload(healthXP))
             ServerPlayNetworking.send(this, LevelPayload(healthLevel))
-            ServerPlayNetworking.send(this, LevelsAndXpPayload(config.levelsAndXP))
         }
         val entityAttributeModifier = EntityAttributeModifier(HEALTH_MODIFIER_IDENTIFIER, (-20 + config.startingHP + healthLevel * config.hpPerLevel).coerceAtLeast(-19).toDouble(), EntityAttributeModifier.Operation.ADD_VALUE)
         val entityAttributeInstance = getAttributeInstance(EntityAttributes.MAX_HEALTH)

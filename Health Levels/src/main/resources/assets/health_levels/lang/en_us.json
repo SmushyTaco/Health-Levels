@@ -1,9 +1,12 @@
 {
-  "text.autoconfig.health_levels.title": "Health Levels Configuration",
-  "text.autoconfig.health_levels.option.enableHealthExperienceBar": "Enable Health Experience Bar",
-  "text.autoconfig.health_levels.option.levelsAndXP": "Levels And XP",
-  "text.autoconfig.health_levels.option.hpPerLevel": "HP Per Level",
-  "text.autoconfig.health_levels.option.startingHP": "Starting HP",
-  "text.autoconfig.health_levels.option.healOnLevelUp": "Heal On Level Up",
-  "text.autoconfig.health_levels.option.loseType": "Lose Type"
+  "text.config.health_levels.title": "Health Levels Configuration",
+  "text.config.health_levels.option.enableHealthExperienceBar": "Enable Health Experience Bar",
+  "text.config.health_levels.option.levelsAndXP": "Levels And XP",
+  "text.config.health_levels.option.hpPerLevel": "HP Per Level",
+  "text.config.health_levels.option.startingHP": "Starting HP",
+  "text.config.health_levels.option.healOnLevelUp": "Heal On Level Up",
+  "text.config.health_levels.option.loseType": "Lose Type",
+  "text.config.health_levels.option.loseType.value.levels_and_xp": "Levels and XP",
+  "text.config.health_levels.option.loseType.value.xp": "XP",
+  "text.config.health_levels.option.loseType.value.none": "None"
 }

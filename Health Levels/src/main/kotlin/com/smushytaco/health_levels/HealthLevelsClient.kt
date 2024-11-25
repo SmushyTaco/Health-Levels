@@ -1,17 +1,13 @@
 package com.smushytaco.health_levels
 import com.smushytaco.health_levels.abstractions.HealthLevelsXP
-import com.smushytaco.health_levels.payloads.LevelsAndXpPayload
 import com.smushytaco.health_levels.payloads.LevelPayload
 import com.smushytaco.health_levels.payloads.XpPayload
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-@Suppress("UNUSED")
 @Environment(EnvType.CLIENT)
 object HealthLevelsClient : ClientModInitializer {
-    var levelsAndXP = listOf(0)
-        private set
     var healthLevel = 0
         private set
     var healthXP = 0
@@ -31,6 +27,5 @@ object HealthLevelsClient : ClientModInitializer {
                 it.healthLevel = healthLevel
             }
         }
-        ClientPlayNetworking.registerGlobalReceiver(LevelsAndXpPayload.payloadId) { levelsAndXpPayload, _ -> levelsAndXP = levelsAndXpPayload.value }
     }
 }

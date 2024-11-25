@@ -22,7 +22,7 @@ object InGameHudLogic {
         ci.cancel()
         Profilers.get().push("levelUpHPBars")
         run {
-            val target = HealthLevelsClient.levelsAndXP[player.healthLevel.coerceAtMost(HealthLevelsClient.levelsAndXP.size - 1)]
+            val target = HealthLevels.config.levelsAndXP[player.healthLevel.coerceAtMost(HealthLevels.config.levelsAndXP.size - 1)]
             val hpXpBarWidth = if (target != 0) HealthLevelsClient.healthXP * 91 / target else 0
             val mcXpBarWidth = (player.experienceProgress * 91).toInt()
             val top = context.scaledWindowHeight - 29

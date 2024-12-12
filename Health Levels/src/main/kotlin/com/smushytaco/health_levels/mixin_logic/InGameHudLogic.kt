@@ -3,8 +3,6 @@ import com.smushytaco.health_levels.HealthLevels
 import com.smushytaco.health_levels.HealthLevels.identifier
 import com.smushytaco.health_levels.HealthLevelsClient
 import com.smushytaco.health_levels.abstractions.HealthLevelsXP
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.gui.DrawContext
@@ -12,7 +10,6 @@ import net.minecraft.client.render.RenderLayer
 import net.minecraft.util.Identifier
 import net.minecraft.util.profiler.Profilers
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
-@Environment(EnvType.CLIENT)
 object InGameHudLogic {
     private val ICONS = "textures/gui/experience_bars.png".identifier
     fun hookRenderExperienceBarLogic(client: MinecraftClient, ci: CallbackInfo, context: DrawContext, x: Int, fontRenderer: TextRenderer) {

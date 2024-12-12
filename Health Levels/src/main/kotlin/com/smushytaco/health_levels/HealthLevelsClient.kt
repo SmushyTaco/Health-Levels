@@ -3,10 +3,7 @@ import com.smushytaco.health_levels.abstractions.HealthLevelsXP
 import com.smushytaco.health_levels.payloads.LevelPayload
 import com.smushytaco.health_levels.payloads.XpPayload
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-@Environment(EnvType.CLIENT)
 object HealthLevelsClient : ClientModInitializer {
     var healthLevel = 0
         private set

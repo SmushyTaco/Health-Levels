@@ -1,8 +1,6 @@
-package com.smushytaco.health_levels.mixins;
+package com.smushytaco.health_levels.mixins.client;
 import com.smushytaco.health_levels.HealthLevels;
 import com.smushytaco.health_levels.mixin_logic.InGameHudLogic;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -15,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
-@Environment(EnvType.CLIENT)
 public abstract class InGameHudMixin {
     @Shadow
     @Final

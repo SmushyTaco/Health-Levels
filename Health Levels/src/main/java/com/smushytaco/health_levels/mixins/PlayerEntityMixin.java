@@ -21,26 +21,32 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     @Unique
     private boolean hasLeveledUp;
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public int getHealthLevel() { return MathHelper.clamp(healthLevel, 0, HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size()); }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setHealthLevel(int healthLevel) {
         int previousHealthLevel = getHealthLevel();
         this.healthLevel = MathHelper.clamp(healthLevel, 0, HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size());
         if (getHealthLevel() > previousHealthLevel) { setHasLeveledUp(true); }
     }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public int getHealthXP() {
         if (getHealthLevel() == HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size() || healthXP < 0) setHealthXP(0);
         return healthXP;
     }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setHealthXP(int healthXP) {
         if (getHealthLevel() == HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size() || healthXP < 0) healthXP = 0;
         this.healthXP = healthXP;
     }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public boolean getHasLeveledUp() { return hasLeveledUp; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setHasLeveledUp(boolean hasLeveledUp) { this.hasLeveledUp = hasLeveledUp; }
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) { HealthMethods.INSTANCE.updateHealth((PlayerEntity) (Object) this); }

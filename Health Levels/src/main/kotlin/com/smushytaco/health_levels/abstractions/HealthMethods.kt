@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundCategory
+import kotlin.jvm.optionals.getOrNull
 object HealthMethods {
     val HEALTH_XP_PACKET_IDENTIFIER = "health_xp".identifier
     val HEALTH_LEVEL_PACKET_IDENTIFIER = "health_level".identifier
@@ -66,8 +67,8 @@ object HealthMethods {
     fun PlayerEntity.readFromTag(nbt: NbtElement) {
         nbt as NbtCompound
         if (this !is HealthLevelsXP) return
-        healthLevel = nbt.getInt(HEALTH_LEVEL_KEY)
-        healthXP = nbt.getInt(HEALTH_XP_KEY)
+        nbt.getInt(HEALTH_LEVEL_KEY).getOrNull()?.let { healthLevel = it }
+        nbt.getInt(HEALTH_XP_KEY).getOrNull()?.let { healthXP = it }
         onModified()
     }
 }

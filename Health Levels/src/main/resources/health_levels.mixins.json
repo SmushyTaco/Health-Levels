@@ -9,7 +9,8 @@
     "ServerPlayerEntityMixin"
   ],
   "client": [
-    "client.InGameHudMixin"
+    "client.BarMixin",
+    "client.ExperienceBarMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -4,7 +4,6 @@ import com.smushytaco.health_levels.HealthLevels;
 import com.smushytaco.health_levels.abstractions.HealthLevelsXP;
 import com.smushytaco.health_levels.abstractions.HealthMethods;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,7 +48,7 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setHasLeveledUp(boolean hasLeveledUp) { this.hasLeveledUp = hasLeveledUp; }
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) { HealthMethods.INSTANCE.updateHealth((PlayerEntity) (Object) this); }
+    private void onInit(World world, GameProfile profile, CallbackInfo ci) { HealthMethods.INSTANCE.updateHealth((PlayerEntity) (Object) this); }
     @Inject(method = "addExperience", at = @At("HEAD"))
     private void hookAddExperience(int experience, CallbackInfo ci) {
         setHealthXP(getHealthXP() + experience);

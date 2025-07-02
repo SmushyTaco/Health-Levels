@@ -11,7 +11,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.nbt.NbtElement
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundCategory
 import kotlin.jvm.optionals.getOrNull
@@ -64,8 +63,7 @@ object HealthMethods {
             nbtCompound.putInt(HEALTH_XP_KEY, healthXP)
             return nbtCompound
         }
-    fun PlayerEntity.readFromTag(nbt: NbtElement) {
-        nbt as NbtCompound
+    fun PlayerEntity.readFromTag(nbt: NbtCompound) {
         if (this !is HealthLevelsXP) return
         nbt.getInt(HEALTH_LEVEL_KEY).getOrNull()?.let { healthLevel = it }
         nbt.getInt(HEALTH_XP_KEY).getOrNull()?.let { healthXP = it }

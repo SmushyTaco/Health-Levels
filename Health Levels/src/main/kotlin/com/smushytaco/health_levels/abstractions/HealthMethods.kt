@@ -27,12 +27,11 @@ object HealthMethods {
         }
         val entityAttributeModifier = EntityAttributeModifier(HEALTH_MODIFIER_IDENTIFIER, (-20 + config.startingHP + healthLevel * config.hpPerLevel).coerceAtLeast(-19).toDouble(), EntityAttributeModifier.Operation.ADD_VALUE)
         val entityAttributeInstance = getAttributeInstance(EntityAttributes.MAX_HEALTH)
-        entityAttributeInstance?.removeModifier(entityAttributeModifier)
-        entityAttributeInstance?.addPersistentModifier(entityAttributeModifier)
+        entityAttributeInstance?.overwritePersistentModifier(entityAttributeModifier)
         if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) health = maxHealth
         if (hasLeveledUp) {
             hasLeveledUp = false
-            world.playSound(null, x, y, z, HealthLevels.LEVEL_UP_HEALTH, SoundCategory.PLAYERS, 1.0F, 1.0F)
+            playSoundToPlayer(HealthLevels.LEVEL_UP_HEALTH, SoundCategory.PLAYERS, 1.0F, 1.0F)
         }
     }
     fun PlayerEntity.copyPlayerData(playerEntity: PlayerEntity) {

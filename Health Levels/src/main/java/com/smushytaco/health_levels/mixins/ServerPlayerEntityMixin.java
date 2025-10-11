@@ -21,7 +21,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     protected ServerPlayerEntityMixin(World world, GameProfile profile) { super(world, profile); }
     @Inject(method = "teleportTo*", at = @At(value = "RETURN", ordinal = 1))
     private void hookTeleportTo(TeleportTarget teleportTarget, CallbackInfoReturnable<Entity> cir) {
-        HealthMethods.INSTANCE.onModified(this);
+        HealthMethods.INSTANCE.onModified(this, false);
         ((GetEntryAccessor) dataTracker).invokeGetEntry(HealthAccessor.getHEALTH()).setDirty(true);
     }
     @Inject(method = "writeCustomData", at = @At("HEAD"))

@@ -52,6 +52,6 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     @Inject(method = "addExperience", at = @At("HEAD"))
     private void hookAddExperience(int experience, CallbackInfo ci) {
         setHealthXP(getHealthXP() + experience);
-        HealthMethods.INSTANCE.onModified((PlayerEntity) (Object) this);
+        HealthMethods.INSTANCE.onModified((PlayerEntity) (Object) this, false);
     }
 }

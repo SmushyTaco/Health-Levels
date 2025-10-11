@@ -31,7 +31,7 @@ object HealthMethods {
         if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) health = maxHealth
         if (hasLeveledUp) {
             hasLeveledUp = false
-            if (networkHandler != null) playSoundToPlayer(HealthLevels.LEVEL_UP_HEALTH, SoundCategory.PLAYERS, 1.0F, 1.0F)
+            playSoundToPlayer(HealthLevels.LEVEL_UP_HEALTH, SoundCategory.PLAYERS, 1.0F, 1.0F)
         }
     }
     fun PlayerEntity.copyPlayerData(playerEntity: PlayerEntity) {
@@ -40,12 +40,13 @@ object HealthMethods {
         healthXP = playerEntity.healthXP
         onModified()
     }
-    fun PlayerEntity.onModified() {
+    fun PlayerEntity.onModified(isFromReadingNBT: Boolean = false) {
         if (this !is HealthLevelsXP) return
         while(healthLevel < config.levelsAndXP.size && healthXP >= config.levelsAndXP[healthLevel.coerceAtMost(config.levelsAndXP.size - 1)]) {
             healthXP -= config.levelsAndXP[healthLevel.coerceAtMost(config.levelsAndXP.size - 1)]
             healthLevel++
         }
+        if (isFromReadingNBT) hasLeveledUp = false
         updateHealth()
     }
     fun PlayerEntity.deathPenalty() {
@@ -66,6 +67,6 @@ object HealthMethods {
         if (this !is HealthLevelsXP) return
         nbt.getInt(HEALTH_LEVEL_KEY).getOrNull()?.let { healthLevel = it }
         nbt.getInt(HEALTH_XP_KEY).getOrNull()?.let { healthXP = it }
-        onModified()
+        onModified(true)
     }
 }

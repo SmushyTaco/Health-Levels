@@ -31,7 +31,7 @@ object HealthMethods {
         if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) health = maxHealth
         if (hasLeveledUp) {
             hasLeveledUp = false
-            playSoundToPlayer(HealthLevels.LEVEL_UP_HEALTH, SoundCategory.PLAYERS, 1.0F, 1.0F)
+            if (networkHandler != null) playSoundToPlayer(HealthLevels.LEVEL_UP_HEALTH, SoundCategory.PLAYERS, 1.0F, 1.0F)
         }
     }
     fun PlayerEntity.copyPlayerData(playerEntity: PlayerEntity) {

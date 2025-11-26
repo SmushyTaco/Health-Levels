@@ -12,7 +12,7 @@
     "issues": "https://www.curseforge.com/minecraft/mc-mods/health-levels/issues/",
     "sources": "https://github.com/SmushyTaco/Health-Levels/"
   },
-  "license": "GNU Lesser General Public License version 3 (LGPLv3)",
+  "license": "Apache-2.0",
   "icon": "assets/health_levels/icon.png",
   "environment": "*",
   "entrypoints": {

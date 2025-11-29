@@ -11,18 +11,18 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
-import net.minecraft.sound.SoundEvent
-import net.minecraft.util.Identifier
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
 object HealthLevels : ModInitializer {
     const val MOD_ID = "health_levels"
     val HEALTH_MODIFIER_IDENTIFIER = "health_modifier".identifier
     val config = ModConfig.createAndLoad()
     private val LEVEL_UP_HEALTH_IDENTIFIER = "level_up_health".identifier
-    val LEVEL_UP_HEALTH: SoundEvent = SoundEvent.of(LEVEL_UP_HEALTH_IDENTIFIER)
+    val LEVEL_UP_HEALTH: SoundEvent = SoundEvent.createVariableRangeEvent(LEVEL_UP_HEALTH_IDENTIFIER)
     override fun onInitialize() {
         PayloadTypeRegistry.playS2C().register(XpPayload.payloadId, XpPayload.CODEC)
         PayloadTypeRegistry.playS2C().register(LevelPayload.payloadId, LevelPayload.CODEC)
-        ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted { it.commandManager.dispatcher.register(Command.buildHealthLevelsCommand()) })
+        ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted { it.commands.dispatcher.register(Command.buildHealthLevelsCommand()) })
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             newPlayer.onModified()
             newPlayer.health = newPlayer.maxHealth
@@ -33,6 +33,6 @@ object HealthLevels : ModInitializer {
         })
         ServerPlayConnectionEvents.JOIN.register(ServerPlayConnectionEvents.Join { handler, _, _ -> handler.player.onModified() })
     }
-    val String.identifier: Identifier
-        get() = Identifier.of(MOD_ID, this)
+    val String.identifier: ResourceLocation
+        get() = ResourceLocation.fromNamespaceAndPath(MOD_ID, this)
 }

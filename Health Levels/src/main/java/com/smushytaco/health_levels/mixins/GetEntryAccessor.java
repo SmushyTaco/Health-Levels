@@ -1,10 +1,10 @@
 package com.smushytaco.health_levels.mixins;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
-@Mixin(DataTracker.class)
+@Mixin(SynchedEntityData.class)
 public interface GetEntryAccessor {
     @Invoker
-    <T> DataTracker.Entry<T> invokeGetEntry(TrackedData<T> trackedData);
+    <T> SynchedEntityData.DataItem<T> invokeGetItem(EntityDataAccessor<T> trackedData);
 }

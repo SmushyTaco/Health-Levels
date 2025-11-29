@@ -3,15 +3,15 @@ import com.mojang.authlib.GameProfile;
 import com.smushytaco.health_levels.HealthLevels;
 import com.smushytaco.health_levels.abstractions.HealthLevelsXP;
 import com.smushytaco.health_levels.abstractions.HealthMethods;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin implements HealthLevelsXP {
     @Unique
     private int healthLevel;
@@ -21,12 +21,12 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     private boolean hasLeveledUp;
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")
-    public int getHealthLevel() { return MathHelper.clamp(healthLevel, 0, HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size()); }
+    public int getHealthLevel() { return Mth.clamp(healthLevel, 0, HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size()); }
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setHealthLevel(int healthLevel) {
         int previousHealthLevel = getHealthLevel();
-        this.healthLevel = MathHelper.clamp(healthLevel, 0, HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size());
+        this.healthLevel = Mth.clamp(healthLevel, 0, HealthLevels.INSTANCE.getConfig().getLevelsAndXP().size());
         if (getHealthLevel() > previousHealthLevel) { setHasLeveledUp(true); }
     }
     @Override
@@ -48,10 +48,10 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setHasLeveledUp(boolean hasLeveledUp) { this.hasLeveledUp = hasLeveledUp; }
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(World world, GameProfile profile, CallbackInfo ci) { HealthMethods.INSTANCE.updateHealth((PlayerEntity) (Object) this); }
-    @Inject(method = "addExperience", at = @At("HEAD"))
+    private void onInit(Level world, GameProfile profile, CallbackInfo ci) { HealthMethods.INSTANCE.updateHealth((Player) (Object) this); }
+    @Inject(method = "giveExperiencePoints", at = @At("HEAD"))
     private void hookAddExperience(int experience, CallbackInfo ci) {
         setHealthXP(getHealthXP() + experience);
-        HealthMethods.INSTANCE.onModified((PlayerEntity) (Object) this, false);
+        HealthMethods.INSTANCE.onModified((Player) (Object) this, false);
     }
 }

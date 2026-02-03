@@ -8,6 +8,7 @@ import com.smushytaco.health_levels.payloads.LevelPayload
 import com.smushytaco.health_levels.payloads.XpPayload
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
@@ -21,6 +22,7 @@ object HealthMethods {
     private const val HEALTH_LEVEL_KEY = "healthLevel"
     fun Player.updateHealth() {
         if (this !is ServerPlayer || this !is HealthLevelsXP) return
+        @Suppress("kotlin:S6619")
         if (connection != null) {
             ServerPlayNetworking.send(this, XpPayload(healthXP))
             ServerPlayNetworking.send(this, LevelPayload(healthLevel))
@@ -31,7 +33,8 @@ object HealthMethods {
         if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) health = maxHealth
         if (hasLeveledUp) {
             hasLeveledUp = false
-            playNotifySound(HealthLevels.LEVEL_UP_HEALTH, SoundSource.PLAYERS, 1.0F, 1.0F)
+            @Suppress("kotlin:S6619")
+            if (connection != null) connection.send(ClientboundSoundPacket(HealthLevels.LEVEL_UP_HEALTH, SoundSource.PLAYERS, x, y, z, 1.0F, 1.0F, level().random.nextLong()))
         }
     }
     fun Player.copyPlayerData(playerEntity: Player) {

@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.network.chat.Component
+import net.minecraft.server.permissions.Permissions
 import net.minecraft.world.entity.player.Player
 object Command {
     private fun getter(response: (HealthLevelsXP) -> Component, literal: String = "check"): LiteralArgumentBuilder<CommandSourceStack> {
@@ -18,7 +19,7 @@ object Command {
             }
             .then(
                 Commands.argument("player", EntityArgument.player())
-                .requires { it.hasPermission(2) }
+                .requires { it.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER) }
                 .executes { ctx ->
                     ctx.source.sendSuccess({ response(EntityArgument.getPlayer(ctx, "player") as HealthLevelsXP) }, true)
                     return@executes 0
@@ -26,7 +27,7 @@ object Command {
     }
     private fun setter(literal: String, set: (Player, Int) -> Unit): LiteralArgumentBuilder<CommandSourceStack> {
         return Commands.literal(literal)
-            .requires { it.hasPermission(2) }
+            .requires { it.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER) }
             .then(
                 Commands.argument("players", EntityArgument.players())
                 .then(

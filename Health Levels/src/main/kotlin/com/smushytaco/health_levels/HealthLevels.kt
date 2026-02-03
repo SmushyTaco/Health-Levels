@@ -11,14 +11,16 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
 object HealthLevels : ModInitializer {
     const val MOD_ID = "health_levels"
     val HEALTH_MODIFIER_IDENTIFIER = "health_modifier".identifier
     val config = ModConfig.createAndLoad()
     private val LEVEL_UP_HEALTH_IDENTIFIER = "level_up_health".identifier
-    val LEVEL_UP_HEALTH: SoundEvent = SoundEvent.createVariableRangeEvent(LEVEL_UP_HEALTH_IDENTIFIER)
+    val LEVEL_UP_HEALTH: Holder<SoundEvent> = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvent.createVariableRangeEvent(LEVEL_UP_HEALTH_IDENTIFIER))
     override fun onInitialize() {
         PayloadTypeRegistry.playS2C().register(XpPayload.payloadId, XpPayload.CODEC)
         PayloadTypeRegistry.playS2C().register(LevelPayload.payloadId, LevelPayload.CODEC)
@@ -33,6 +35,6 @@ object HealthLevels : ModInitializer {
         })
         ServerPlayConnectionEvents.JOIN.register(ServerPlayConnectionEvents.Join { handler, _, _ -> handler.player.onModified() })
     }
-    val String.identifier: ResourceLocation
-        get() = ResourceLocation.fromNamespaceAndPath(MOD_ID, this)
+    val String.identifier: Identifier
+        get() = Identifier.fromNamespaceAndPath(MOD_ID, this)
 }

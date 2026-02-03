@@ -12,14 +12,14 @@ object HealthLevelsClient : ClientModInitializer {
     override fun onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(XpPayload.payloadId) { xpPayload, context ->
             this.healthXP = xpPayload.value
-            context.player()?.let {
+            context.player().let {
                 if (it !is HealthLevelsXP) return@let
                 it.healthXP = healthXP
             }
         }
         ClientPlayNetworking.registerGlobalReceiver(LevelPayload.payloadId) { levelPayload, context ->
             this.healthLevel = levelPayload.value
-            context.player()?.let {
+            context.player().let {
                 if (it !is HealthLevelsXP) return@let
                 it.healthLevel = healthLevel
             }

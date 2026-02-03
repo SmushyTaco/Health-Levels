@@ -8,7 +8,7 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.profiling.Profiler
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 object ExperienceBarLogic {
@@ -39,7 +39,7 @@ object ExperienceBarLogic {
         Profiler.get().pop()
     }
     @Suppress("SameParameterValue")
-    private fun renderProgress(texture: ResourceLocation, context: GuiGraphics, left: Int, top: Int, texX: Float, filled: Int) {
+    private fun renderProgress(texture: Identifier, context: GuiGraphics, left: Int, top: Int, texX: Float, filled: Int) {
         context.blit(RenderPipelines.GUI_TEXTURED, texture, left, top, texX, 0.0F, 91, 5, 256, 256)
         if (filled > 0) context.blit(RenderPipelines.GUI_TEXTURED, texture, left, top, texX, 5.0F, filled, 5, 256, 256)
     }

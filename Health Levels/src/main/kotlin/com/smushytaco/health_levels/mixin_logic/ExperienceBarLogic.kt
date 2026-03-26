@@ -5,7 +5,7 @@ import com.smushytaco.health_levels.HealthLevelsClient
 import com.smushytaco.health_levels.abstractions.HealthLevelsXP
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
@@ -13,7 +13,7 @@ import net.minecraft.util.profiling.Profiler
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 object ExperienceBarLogic {
     private val ICONS = "textures/gui/experience_bars.png".identifier
-    fun hookRenderExperienceBarLogic(client: Minecraft, ci: CallbackInfo, context: GuiGraphics, x: Int, textRenderer: Font) {
+    fun hookRenderExperienceBarLogic(client: Minecraft, ci: CallbackInfo, context: GuiGraphicsExtractor, x: Int, textRenderer: Font) {
         if (!HealthLevels.config.enableHealthExperienceBar) return
         val player = client.player ?: return
         if (player !is HealthLevelsXP) return
@@ -39,19 +39,19 @@ object ExperienceBarLogic {
         Profiler.get().pop()
     }
     @Suppress("SameParameterValue")
-    private fun renderProgress(texture: Identifier, context: GuiGraphics, left: Int, top: Int, texX: Float, filled: Int) {
+    private fun renderProgress(texture: Identifier, context: GuiGraphicsExtractor, left: Int, top: Int, texX: Float, filled: Int) {
         context.blit(RenderPipelines.GUI_TEXTURED, texture, left, top, texX, 0.0F, 91, 5, 256, 256)
         if (filled > 0) context.blit(RenderPipelines.GUI_TEXTURED, texture, left, top, texX, 5.0F, filled, 5, 256, 256)
     }
-    private fun renderLevel(scaledHeight: Int, textRenderer: Font, context: GuiGraphics, level: Int, left: Int, color: Int, isHealthLevel: Boolean) {
+    private fun renderLevel(scaledHeight: Int, textRenderer: Font, context: GuiGraphicsExtractor, level: Int, left: Int, color: Int, isHealthLevel: Boolean) {
         if (level == 0) return
         val text = Component.translatable("gui.experience.level", level)
         val updatedLeft = if (isHealthLevel) left - textRenderer.width(text) else left
         val top = scaledHeight - 30
-        context.drawString(textRenderer, text, updatedLeft + 1, top, -16777216, false)
-        context.drawString(textRenderer, text, updatedLeft - 1, top, -16777216, false)
-        context.drawString(textRenderer, text, updatedLeft, top + 1, -16777216, false)
-        context.drawString(textRenderer, text, updatedLeft, top - 1, -16777216, false)
-        context.drawString(textRenderer, text, updatedLeft, top, color, false)
+        context.text(textRenderer, text, updatedLeft + 1, top, -16777216, false)
+        context.text(textRenderer, text, updatedLeft - 1, top, -16777216, false)
+        context.text(textRenderer, text, updatedLeft, top + 1, -16777216, false)
+        context.text(textRenderer, text, updatedLeft, top - 1, -16777216, false)
+        context.text(textRenderer, text, updatedLeft, top, color, false)
     }
 }

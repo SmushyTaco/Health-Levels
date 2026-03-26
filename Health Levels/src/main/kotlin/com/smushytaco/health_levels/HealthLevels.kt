@@ -22,8 +22,8 @@ object HealthLevels : ModInitializer {
     private val LEVEL_UP_HEALTH_IDENTIFIER = "level_up_health".identifier
     val LEVEL_UP_HEALTH: Holder<SoundEvent> = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvent.createVariableRangeEvent(LEVEL_UP_HEALTH_IDENTIFIER))
     override fun onInitialize() {
-        PayloadTypeRegistry.playS2C().register(XpPayload.payloadId, XpPayload.CODEC)
-        PayloadTypeRegistry.playS2C().register(LevelPayload.payloadId, LevelPayload.CODEC)
+        PayloadTypeRegistry.clientboundPlay().register(XpPayload.payloadId, XpPayload.CODEC)
+        PayloadTypeRegistry.clientboundPlay().register(LevelPayload.payloadId, LevelPayload.CODEC)
         ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted { it.commands.dispatcher.register(Command.buildHealthLevelsCommand()) })
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             newPlayer.onModified()

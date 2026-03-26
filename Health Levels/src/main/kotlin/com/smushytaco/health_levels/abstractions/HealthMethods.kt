@@ -22,7 +22,7 @@ object HealthMethods {
     private const val HEALTH_LEVEL_KEY = "healthLevel"
     fun Player.updateHealth() {
         if (this !is ServerPlayer || this !is HealthLevelsXP) return
-        @Suppress("kotlin:S6619")
+        @Suppress("kotlin:S6619", "SENSELESS_COMPARISON")
         if (connection != null) {
             ServerPlayNetworking.send(this, XpPayload(healthXP))
             ServerPlayNetworking.send(this, LevelPayload(healthLevel))
@@ -33,7 +33,7 @@ object HealthMethods {
         if (health > maxHealth || config.healOnLevelUp && hasLeveledUp) health = maxHealth
         if (hasLeveledUp) {
             hasLeveledUp = false
-            @Suppress("kotlin:S6619")
+            @Suppress("kotlin:S6619", "SENSELESS_COMPARISON")
             if (connection != null) connection.send(ClientboundSoundPacket(HealthLevels.LEVEL_UP_HEALTH, SoundSource.PLAYERS, x, y, z, 1.0F, 1.0F, level().random.nextLong()))
         }
     }

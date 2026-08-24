@@ -20,15 +20,15 @@ import java.util.Optional;
 public abstract class ServerPlayerEntityMixin extends Player {
     protected ServerPlayerEntityMixin(Level world, GameProfile profile) { super(world, profile); }
     @Inject(method = "teleport*", at = @At(value = "RETURN", ordinal = 1))
-    private void hookTeleportTo(TeleportTransition teleportTarget, CallbackInfoReturnable<Entity> cir) {
+    private void hookTeleportTo(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
         HealthMethods.INSTANCE.onModified(this, false);
         ((GetEntryAccessor) entityData).invokeGetItem(HealthAccessor.getDATA_HEALTH_ID()).setDirty(true);
     }
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-    private void hookWriteCustomData(ValueOutput view, CallbackInfo ci) { view.store(HealthLevels.MOD_ID, CompoundTag.CODEC, HealthMethods.INSTANCE.getTag(this)); }
+    private void hookWriteCustomData(ValueOutput output, CallbackInfo ci) { output.store(HealthLevels.MOD_ID, CompoundTag.CODEC, HealthMethods.INSTANCE.getTag(this)); }
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-    private void hookReadCustomData(ValueInput view, CallbackInfo ci) {
-        Optional<CompoundTag> data = view.read(HealthLevels.MOD_ID, CompoundTag.CODEC);
+    private void hookReadCustomData(ValueInput input, CallbackInfo ci) {
+        Optional<CompoundTag> data = input.read(HealthLevels.MOD_ID, CompoundTag.CODEC);
         if (data.isEmpty()) return;
         HealthMethods.INSTANCE.readFromTag(this, data.get());
     }

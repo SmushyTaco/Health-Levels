@@ -62,9 +62,9 @@ loom {
                 }
             register("clientAuth") {
                 inherit(getByName("client"))
-                configName = "Minecraft Client (Auth)"
+                displayName = "Minecraft Client (Auth)"
                 val acc = account.get()
-                programArgs("--username", acc.profile.name, "--uuid", acc.profile.id, "--accessToken", acc.ygg.token)
+                programArguments.addAll("--username", acc.profile.name, "--uuid", acc.profile.id, "--accessToken", acc.ygg.token)
             }
         }
     }
@@ -126,6 +126,7 @@ tasks {
     withType<Test>().configureEach { defaultCharacterEncoding = "UTF-8" }
     withType<KotlinCompile>().configureEach {
         compilerOptions {
+            moduleName = project.name
             extraWarnings = true
             jvmTarget = javaVersion.map { JvmTarget.valueOf("JVM_${if (it == 8) "1_8" else it}") }
         }
@@ -152,9 +153,10 @@ tasks {
         filesMatching("**/*.mixins.json") { expand(resourceMap.filterKeys { it == "java" }) }
     }
     register<TaskPublishCurseForge>("publishCurseForge") {
+        description = "Publish to CurseForge."
         group = "publishing"
         disableVersionDetection()
-        apiToken = env.fetch("CURSEFORGE_TOKEN", "")
+        apiToken = env.fetch("CURSEFORGE_TOKEN").getOrElse("")
         val file = upload(490284, jar)
         file.displayName = "[${libs.versions.minecraft.get()}] Health Levels"
         file.addEnvironment("Client", "Server")
@@ -165,7 +167,7 @@ tasks {
     }
 }
 modrinth {
-    token = env.fetch("MODRINTH_TOKEN", "")
+    token = env.fetch("MODRINTH_TOKEN").orElse("")
     projectId = "health-levels"
     uploadFile.set(tasks.jar)
     gameVersions.add(libs.versions.minecraft)

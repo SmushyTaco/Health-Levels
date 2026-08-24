@@ -48,10 +48,10 @@ public abstract class PlayerEntityMixin implements HealthLevelsXP {
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setHasLeveledUp(boolean hasLeveledUp) { this.hasLeveledUp = hasLeveledUp; }
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void onInit(Level world, GameProfile profile, CallbackInfo ci) { HealthMethods.INSTANCE.updateHealth((Player) (Object) this); }
+    private void onInit(Level level, GameProfile gameProfile, CallbackInfo ci) { HealthMethods.INSTANCE.updateHealth((Player) (Object) this); }
     @Inject(method = "giveExperiencePoints", at = @At("HEAD"))
-    private void hookAddExperience(int experience, CallbackInfo ci) {
-        setHealthXP(getHealthXP() + experience);
+    private void hookAddExperience(int i, CallbackInfo ci) {
+        setHealthXP(getHealthXP() + i);
         HealthMethods.INSTANCE.onModified((Player) (Object) this, false);
     }
 }
